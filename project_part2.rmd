@@ -1,0 +1,71 @@
+---
+title: "Coursera Statistical Inference Project"
+author: "Seo-yeon Lim"
+date: "2018/03/03"
+output: word_document
+---
+
+#Part 2: Basic Inferential Data Analysis - ToothGrowth data
+
+##Overview
+In this second part of the project, our goal is to conduct a basic inferential data analysis using ToothGrowth data in R datasets package.
+In this dataset, there are total 60 observations (60 guinea pigs as sample). Each guinea pig received either 0.5, 1 or 2mg/day of vitamin c. Vitamin C was delivered by one of two methods, as orange juice or ascorbic acid. The purpose of this dataset was to see the effect of vitamin c on tooth growth in guinea pigs. 
+ToothGrowth dataset has 3 variables:
+1. len: tooth length
+2. supp: supplement type (VC or OJ)
+3. dose: dose in milligrams/day
+
+##Getting ready for the analysis
+Load dataset:
+```{r, echo=TRUE}
+library(datasets)
+data(ToothGrowth)
+```
+
+##Basic summary of the data
+```{r, echo=TRUE}
+summary(ToothGrowth) #Summary statistics of each variable.
+```
+
+##Basic exploratory data analyses
+I used boxplots to visualize the summary statistics I got above. 
+```{r, echo=TRUE}
+par(mfrow=c(1,2))
+boxplot(len~supp, data=ToothGrowth, col="purple", main= "Tooth Growth", xlab= "Supplement", ylab= "Tooth length") ##Length based on supplement type
+boxplot(len~dose, data=ToothGrowth, col="lightblue", main= "Tooth Growth", xlab= "Dose (mg/day)", ylab= "Tooth length") ##Length based on dose level
+```
+
+##Confidence intervals and hypothesis testing using t-test
+###Compare tooth growth by supplement
+*Null hypothesis*: There is no difference between the two types of supplement (orange juice (OJ) and ascorbic acid(VC))
+```{r, echo=TRUE}
+t.test(len~supp, data=ToothGrowth)
+```
+
+The p-value from the t-test is 0.06063, which is GREATER than our alpha value of 0.05. Also, the 95% confidence interval contains zero. We fail to reject the null hypothesis, and we can say that there is no significant difference on tooth growth based on supplement types.
+
+###Compare tooth growth by different doses
+*Null hypothesis 1*: There is no difference between 0.5mg/day and 1.0mg/day.
+```{r, echo=TRUE}
+dose_0.5_1.0 <- subset(ToothGrowth, dose %in% c(0.5,1.0))
+t.test(len~dose, data=dose_0.5_1.0)
+```
+
+*Null hypothesis 2*: There is no difference between 0.5mg/day and 2.0mg/day.
+```{r, echo=TRUE}
+dose_0.5_2.0 <- subset(ToothGrowth, dose %in% c(0.5,2.0))
+t.test(len~dose, data=dose_0.5_2.0)
+```
+
+*Null hypothsis 3*: There is no difference between 1.0mg/day and 2.0mg/day.
+```{r, echo=TRUE}
+dose_1.0_2.0 <- subset(ToothGrowth, dose %in% c(1.0, 2.0))
+t.test(len~dose, data=dose_1.0_2.0)
+```
+
+For all 3 hypothesis tests, the p-value from the t-test is way smaller than the alpha value of 0.05. The confidence interval does not include zero. Hence, we can reject the null hypothesis and state that there is a signficant difference on dose level of 0.5mg/day and 1.0mg/day, 0.5mg/day and 2.0mg/day, 1.0mg/day and 2.0mg/day on tooth growth. 
+
+##Conclusions and assumptions
+We assume that samples are randomly and independently sampled from the population, and the distribution is normal.
+Based on my data analyis, I can conclude that the supplement type (either OJ or AC) does not affect the tooth growth. However, the dose level (0.5, 1.0 and 2.0mg/day) did show signficant effect on tooth growth.
+
