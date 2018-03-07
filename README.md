@@ -1,2 +1,2 @@
-# stat.inference.project
+# Statistical Inference Project
 Coursera Statistical Inference Project
